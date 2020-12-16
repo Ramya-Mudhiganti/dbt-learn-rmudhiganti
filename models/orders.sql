@@ -1,7 +1,15 @@
+with amount as
+(
+  select p.orderid order_id,
+  sum(amount) as amount
+  from {{ ref('stg_payment') }} p
+  group by p.orderid
+)
+
 select
-p.orderid order_id,
+am.order_id,
 c.customer_id,
-p.amount
-from  {{ ref('stg_customers') }} c
-inner join {{ ref('stg_orders') }} o on o.customer_id=c.customer_id
-inner join {{ ref('stg_payment') }} p on p.orderid=o.order_id
+am.amount
+from  {{ ref('stg_orders') }}  o
+inner join {{ ref('stg_customers') }} c on o.customer_id=c.customer_id
+inner join amount am on am.order_id=o.order_id

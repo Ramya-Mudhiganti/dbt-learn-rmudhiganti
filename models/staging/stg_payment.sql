@@ -3,6 +3,6 @@ select
     orderid,
     paymentmethod,
     status,
-    amount
+    (coalesce(amount,0) )/100 as amount
 
 from raw.stripe.payment
